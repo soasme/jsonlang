@@ -29,6 +29,17 @@ def test_if_then():
         }
     ]) == {'Field': 'Data'}
 
+def test_if_expr():
+    assert exec_jsonlang_code({
+        '$if': False,
+        "$then": 1,
+        "$else": 2,
+    }, {}) == 2
+    assert exec_jsonlang_code({
+        '$if': True,
+        "$then": 1,
+        "$else": 2,
+    }, {}) == 1
 
 def test_if_not_then():
     assert exec_jsonlang([

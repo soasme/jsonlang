@@ -15,17 +15,17 @@ def exec_jsonlang_code(code, env):
         return code
     elif isinstance(code, int):
         return code
-    elif code.get('$assign'):
+    elif '$assign' in code:
         return exec_assign_code(code, env)
-    elif code.get('$if'):
+    elif '$if' in  code:
         return exec_if_code(code, env)
-    elif code.get('$var'):
+    elif '$var' in code:
         return exec_var_code(code, env)
-    elif code.get('$empty'):
+    elif '$empty' in code:
         return exec_empty_code(code, env)
-    elif code.get('$eq'):
+    elif '$eq' in code:
         return exec_eq_code(code, env)
-    elif code.get('$not'):
+    elif '$not' in code:
         return exec_not_code(code, env)
 
 
@@ -46,15 +46,19 @@ def exec_if_code(code, env):
             return exec_jsonlang(dollar_then, env)
         elif isinstance(dollar_then, dict):
             return exec_jsonlang_code(dollar_then, env)
+        else:
+            return dollar_then
     else:
-        if not dollar_else:
-            return
         if isinstance(dollar_else, list):
             return exec_jsonlang(dollar_else, env)
         elif isinstance(dollar_else, dict):
             return exec_jsonlang_code(dollar_else, env)
+        else:
+            return dollar_else
 
 def exec_if_condition_code(code, env):
+    if isinstance(code, bool):
+        return code
     return bool(exec_jsonlang_code(code, env))
 
 def exec_empty_code(code, env):

@@ -1,5 +1,28 @@
 # -*- coding: utf-8 -*-
 
+import json
+
+def help():
+    print "type exit to quit program. enter valid json content please."
+
+def eval_jsonlang():
+    env = {}
+    construct_env(env)
+    help()
+    while True:
+        try:
+            code = raw_input('>> ')
+            if code == 'exit':
+                exit(0)
+            elif code == 'help':
+                help()
+                continue
+            loaded = json.loads(code)
+            print exec_jsonlang_code(loaded, env)
+        except Exception as exc:
+            print 'Error: ', exc
+
+
 def exec_jsonlang(codes, env=None):
     construct_env(env)
     env = dict(env or {})
@@ -85,3 +108,6 @@ def destruct_env(env):
 
 def construct_env(env=None):
     return dict(env or {})
+
+if __name__ == '__main__':
+    eval_jsonlang()

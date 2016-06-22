@@ -43,4 +43,9 @@ setup(
     ],
     test_suite='tests',
     tests_require=test_requirements,
+    entry_points={
+        'console_scripts': [
+            'jsonlang= jsonlang:eval_jsonlang'
+        ]
+    },
 )

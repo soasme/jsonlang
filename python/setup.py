@@ -24,6 +24,7 @@ setup(
     author_email='soasme@gmail.com',
     url='https://github.com/soasme/jsonlang',
     packages=find_packages(exclude=('tests', 'tests.*', '*.tests', '*.tests.*', )),
+    py_modules=['jsonlang'],
     include_package_data=True,
     install_requires=requirements,
     license="MIT",

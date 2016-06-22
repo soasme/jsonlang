@@ -36,6 +36,10 @@ Type `exit` to quit.
 
     >> {"$eq": "A", "$to": 1}
     True
+    >> {"$if": {"$eq": "A", "$to": 1}, "$then": {"$assign": "A", "$to": 2}}
+    2
+    >> {"$eq": "A", "$to": 2}
+    True
 
 ### $not
 

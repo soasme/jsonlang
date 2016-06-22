@@ -59,6 +59,7 @@ def exec_assign_code(code, env):
     key = code['$assign']
     newvalue = code['$to']
     set_assignment_to_env(env, key, newvalue)
+    return newvalue
 
 def exec_if_code(code, env):
     dollar_if = code['$if']

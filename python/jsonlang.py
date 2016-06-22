@@ -110,4 +110,10 @@ def construct_env(env=None):
     return dict(env or {})
 
 if __name__ == '__main__':
-    eval_jsonlang()
+    import sys
+
+    if len(sys.argv) == 2:
+        with open(sys.argv[1]) as f:
+            exec_jsonlang(json.loads(f.read()))
+    else:
+        eval_jsonlang()

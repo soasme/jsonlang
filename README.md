@@ -12,7 +12,24 @@ Using Python Implement:
 
 Type `exit` to quit.
 
-## Examples
+Or
+
+    $ pip install jsonlang
+
+## Usage: hot-reload your json
+
+You can write DSL code in `$dsl` field in JSON object, and then run
+
+```python
+
+from jsonlang import exec_jsonlang
+
+# Given your json object
+dsl = load_dsl_from_database()
+your_json_object = exec_jsonlang(dsl, your_json_object)
+```
+
+## Syntax
 
 ### $if
 
@@ -45,3 +62,4 @@ Type `exit` to quit.
 
     >> {"$not": {"$empty": "A"}}
     True
+

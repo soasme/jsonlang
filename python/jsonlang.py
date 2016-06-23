@@ -34,8 +34,7 @@ class Undefined(object):
 undefined = Undefined()
 
 def exec_jsonlang(codes, env=None):
-    construct_env(env)
-    env = dict(env or {})
+    env = env or {}
     for code in codes:
         exec_jsonlang_code(code, env)
     destruct_env(env)
@@ -64,12 +63,16 @@ def exec_jsonlang_code(code, env):
         return exec_eq_code(code, env)
     elif '$not' in code:
         return exec_not_code(code, env)
+    elif '$local' in code:
+        return exec_local_code(code, env)
 
 def exec_ref_code(code, env):
-    ref = exec_jsonlang_code(code['$ref'], env)
-    if ref not in env:
-        return undefined
-    return env[ref]
+    ref = str(exec_jsonlang_code(code['$ref'], env))
+    if ref.startswith('$$'):
+        return env.get('___local___', {}).get(ref, undefined)
+    elif ref in env:
+        return env[ref]
+    return undefined
 
 def exec_deref_code(code, env):
     ref = exec_jsonlang_code(code['$deref'], env)
@@ -119,10 +122,10 @@ def exec_eq_code(code, env):
         return env.get(code.get('$eq')) == env.get(code.get('$toref'))
     return False
 
-def exec_var_code(code, env):
+def exec_local_code(code, env):
     env.setdefault('___local___', {})
-    assert code['$var'].startswith('$$')
-    env['___local___'][code['$var']] = code.get('$default')
+    assert code['$local'].startswith('$$'), 'Local value must start with $$.'
+    env['___local___'][code['$local']] = code.get('$to', undefined)
 
 def exec_not_code(code, env):
     return not exec_jsonlang_code(code.get('$not'), env)

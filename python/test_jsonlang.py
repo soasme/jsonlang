@@ -94,3 +94,18 @@ def test_resolve_ref():
 
 def test_deref():
     assert not exec_jsonlang_code({'$deref': "A"}, {"A": 1})
+
+def test_scope():
+    assert exec_jsonlang([
+        {
+            "$if": True,
+            "$then": [
+                {"$assign": "A", "$to": 2}
+            ]
+        }
+    ], {"A": 1}) == {"A": 2}
+
+def test_local():
+    env = {}
+    exec_jsonlang_code({'$local': "$$A", "$to": 1}, env)
+    assert exec_jsonlang_code({'$ref': "$$A"}, env) == 1

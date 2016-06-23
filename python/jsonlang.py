@@ -17,6 +17,9 @@ def eval_jsonlang():
             elif code == 'help':
                 help()
                 continue
+            elif code == 'env':
+                print env
+                continue
             loaded = json.loads(code)
             print exec_jsonlang_code(loaded, env)
         except Exception as exc:
@@ -55,8 +58,6 @@ def exec_jsonlang_code(code, env):
         return exec_assign_code(code, env)
     elif '$if' in  code:
         return exec_if_code(code, env)
-    elif '$var' in code:
-        return exec_var_code(code, env)
     elif '$empty' in code:
         return exec_empty_code(code, env)
     elif '$eq' in code:
@@ -65,6 +66,8 @@ def exec_jsonlang_code(code, env):
         return exec_not_code(code, env)
     elif '$local' in code:
         return exec_local_code(code, env)
+    else:
+        return code
 
 def exec_ref_code(code, env):
     ref = str(exec_jsonlang_code(code['$ref'], env))
@@ -75,7 +78,10 @@ def exec_ref_code(code, env):
     return undefined
 
 def exec_deref_code(code, env):
-    ref = exec_jsonlang_code(code['$deref'], env)
+    ref = str(exec_jsonlang_code(code['$deref'], env))
+    if ref.startswith('$$'):
+        if '___local___' in env and ref in env['___local___']:
+            del env['___local___'][ref]
     if ref in env:
         del env[ref]
 
@@ -125,7 +131,11 @@ def exec_eq_code(code, env):
 def exec_local_code(code, env):
     env.setdefault('___local___', {})
     assert code['$local'].startswith('$$'), 'Local value must start with $$.'
-    env['___local___'][code['$local']] = code.get('$to', undefined)
+    if '$to' in code:
+        env['___local___'][code['$local']] = exec_jsonlang_code(code['$to'], env)
+    else:
+        env['___local___'][code['$local']] = undefined
+    return env['___local___'][code['$local']]
 
 def exec_not_code(code, env):
     return not exec_jsonlang_code(code.get('$not'), env)

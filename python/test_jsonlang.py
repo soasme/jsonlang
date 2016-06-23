@@ -91,3 +91,6 @@ def test_eq_toref():
 def test_resolve_ref():
     assert exec_jsonlang_code({'$ref': 'A'}, {'A': 1}) == 1
     assert exec_jsonlang_code({'$ref': 'A'}, {}) == undefined
+
+def test_deref():
+    assert not exec_jsonlang_code({'$deref': "A"}, {"A": 1})

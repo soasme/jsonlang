@@ -99,13 +99,7 @@ def exec_if_condition_code(code, env):
     return bool(exec_jsonlang_code(code, env))
 
 def exec_empty_code(code, env):
-    try:
-        if isinstance(code['$empty'], dict):
-            return bool(not exec_jsonlang_code(code['$empty'], env))
-        else:
-            return bool(not env.get(code['$empty']))
-    except UnresolveVariable:
-        return False
+    return bool(not exec_jsonlang_code(code['$empty'], env))
 
 def exec_eq_code(code, env):
     if "$to" in code:

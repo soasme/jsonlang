@@ -19,7 +19,7 @@ def test_if_then():
     assert exec_jsonlang([
         {
             "$if": {
-                '$empty': 'Field'
+                '$empty': {'$ref': 'Field'}
             },
             "$then": {
                 "$assign": "Field",
@@ -63,7 +63,7 @@ def test_if_then_else():
         {
             "$if": {
                 '$not': {
-                    '$empty': 'Field'
+                    '$empty': {'$ref': 'Field'}
                 }
             },
             "$then": {

@@ -38,16 +38,28 @@ your_json_object = exec_jsonlang(dsl, your_json_object)
 
 ### $empty
 
-    >> {"$empty": "A" }
+    >> {"$empty": 0 }
     True
+
+    >> {"$empty": 1 }
+    False
+
+### $ref
+
+    >> {"$ref": "A"}
+    undefined
 
 ### $assign
 
-    >> {"$assign": "A", "$to", 1}
+    >> {"$assign": "A", "$to": 1}
     1
 
-    >> {"$empty": "A"}
+    >> {"$ref": "A"}
+    1
+
+    >> {"$empty": {"$ref": ""A}}
     False
+
 
 ### $eq
 
@@ -63,3 +75,10 @@ your_json_object = exec_jsonlang(dsl, your_json_object)
     >> {"$not": {"$empty": "A"}}
     True
 
+### $deref
+
+    >> {"$deref": "A"}
+    None
+
+    >> {"$ref": "A"}
+    undefined

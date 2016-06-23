@@ -23,8 +23,12 @@ def eval_jsonlang():
             print 'Error: ', exc
 
 
-class JSONLangError(Exception): pass
-class UnresolveVariable(JSONLangError): pass
+class Undefined(object):
+
+    def __nonzero__(self):
+        return False
+
+undefined = Undefined()
 
 def exec_jsonlang(codes, env=None):
     construct_env(env)
@@ -58,7 +62,7 @@ def exec_jsonlang_code(code, env):
 
 def exec_ref_code(code, env):
     if code['$ref'] not in env:
-        raise UnresolveVariable(code['$ref'])
+        return undefined
     return env[code['$ref']]
 
 def set_assignment_to_env(env, key, value):
@@ -95,7 +99,13 @@ def exec_if_condition_code(code, env):
     return bool(exec_jsonlang_code(code, env))
 
 def exec_empty_code(code, env):
-    return bool(not env.get(code['$empty']))
+    try:
+        if isinstance(code['$empty'], dict):
+            return bool(not exec_jsonlang_code(code['$empty'], env))
+        else:
+            return bool(not env.get(code['$empty']))
+    except UnresolveVariable:
+        return False
 
 def exec_eq_code(code, env):
     if "$to" in code:

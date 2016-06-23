@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from jsonlang import exec_jsonlang, exec_jsonlang_code
-
+from jsonlang import exec_jsonlang, exec_jsonlang_code, UnresolveVariable
+from pytest import raises
 
 def test_assign():
     assert exec_jsonlang([
@@ -87,3 +87,10 @@ def test_eq_to():
 def test_eq_toref():
     assert not exec_jsonlang_code({'$eq': 'A', '$toref': 'B'}, {'A': 1, 'B': 2})
     assert exec_jsonlang_code({'$eq': 'A', '$toref': 'B'}, {'A': 1, 'B': 1})
+
+def test_unresolve_ref():
+    with raises(UnresolveVariable):
+        exec_jsonlang_code({'$ref': 'A'}, {})
+
+def test_resolve_ref():
+    exec_jsonlang_code({'$ref': 'A'}, {'A': 1})

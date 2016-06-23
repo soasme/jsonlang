@@ -23,6 +23,9 @@ def eval_jsonlang():
             print 'Error: ', exc
 
 
+class JSONLangError(Exception): pass
+class UnresolveVariable(JSONLangError): pass
+
 def exec_jsonlang(codes, env=None):
     construct_env(env)
     env = dict(env or {})
@@ -38,6 +41,8 @@ def exec_jsonlang_code(code, env):
         return code
     elif isinstance(code, int):
         return code
+    elif '$ref' in code:
+        return exec_ref_code(code, env)
     elif '$assign' in code:
         return exec_assign_code(code, env)
     elif '$if' in  code:
@@ -51,6 +56,10 @@ def exec_jsonlang_code(code, env):
     elif '$not' in code:
         return exec_not_code(code, env)
 
+def exec_ref_code(code, env):
+    if code['$ref'] not in env:
+        raise UnresolveVariable(code['$ref'])
+    return env[code['$ref']]
 
 def set_assignment_to_env(env, key, value):
     env[key] = value

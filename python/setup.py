@@ -17,7 +17,7 @@ test_requirements = [
 
 setup(
     name='jsonlang',
-    version='0.1.1',
+    version='0.1.2',
     description="JSONLang Python Implement.",
     long_description=readme,
     author="Ju Lin",

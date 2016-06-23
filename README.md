@@ -82,3 +82,10 @@ your_json_object = exec_jsonlang(dsl, your_json_object)
 
     >> {"$ref": "A"}
     undefined
+
+### $local
+
+    >> {"$local": "$$A", "$to": 1}
+    1
+    >> {"$ref": "$$A"}
+    1

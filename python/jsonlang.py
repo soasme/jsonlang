@@ -28,6 +28,9 @@ class Undefined(object):
     def __nonzero__(self):
         return False
 
+    def __str__(self):
+        return 'undefined'
+
 undefined = Undefined()
 
 def exec_jsonlang(codes, env=None):
@@ -47,6 +50,8 @@ def exec_jsonlang_code(code, env):
         return code
     elif '$ref' in code:
         return exec_ref_code(code, env)
+    elif '$deref' in code:
+        return exec_deref_code(code, env)
     elif '$assign' in code:
         return exec_assign_code(code, env)
     elif '$if' in  code:
@@ -61,9 +66,15 @@ def exec_jsonlang_code(code, env):
         return exec_not_code(code, env)
 
 def exec_ref_code(code, env):
-    if code['$ref'] not in env:
+    ref = exec_jsonlang_code(code['$ref'], env)
+    if ref not in env:
         return undefined
-    return env[code['$ref']]
+    return env[ref]
+
+def exec_deref_code(code, env):
+    ref = exec_jsonlang_code(code['$deref'], env)
+    if ref in env:
+        del env[ref]
 
 def set_assignment_to_env(env, key, value):
     env[key] = value
